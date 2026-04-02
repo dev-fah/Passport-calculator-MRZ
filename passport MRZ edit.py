@@ -89,31 +89,32 @@ if submit:
     # ===== CSS AMÉLIORÉ (UNIQUEMENT STYLE / ANIMATIONS) =====
     st.markdown("""
     <style>
-    /* Page background */
+    /* Page background subtle gradient */
     .stApp {
-        background: linear-gradient(180deg, #071021 0%, #0b1220 50%, #071021 100%);
+        background: radial-gradient(1200px 600px at 10% 10%, rgba(6,18,34,0.6), transparent 10%),
+                    radial-gradient(1000px 500px at 90% 90%, rgba(2,40,60,0.55), transparent 12%),
+                    linear-gradient(180deg, #071021 0%, #0b1220 100%);
         color-scheme: dark;
+        font-synthesis: none;
     }
 
-    /* Container cards */
+    /* Card base */
     .card {
-        background: rgba(255,255,255,0.03);
-        backdrop-filter: blur(6px) saturate(120%);
-        -webkit-backdrop-filter: blur(6px) saturate(120%);
-        border: 1px solid rgba(255,255,255,0.04);
-        border-radius: 18px;
-        padding: 20px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+        border-radius: 20px;
+        padding: 22px;
         margin-bottom: 18px;
-        color: #e6fff2;
-        box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+        color: #e9fff4;
+        box-shadow: 0 12px 40px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.03);
         transition: transform 260ms cubic-bezier(.2,.9,.3,1), box-shadow 260ms;
         font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
-    .card:hover { transform: translateY(-6px); box-shadow: 0 22px 60px rgba(2,6,23,0.75); }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 28px 80px rgba(2,6,23,0.75); }
 
     .card h3 {
         margin: 0 0 12px 0;
-        color: #9fffa8;
+        color: #bfffe0;
         font-size: 18px;
         letter-spacing: 0.4px;
     }
@@ -137,31 +138,31 @@ if submit:
         font-size:13px;
     }
 
-    /* Animated badge */
+    /* Animated badge with soft glow */
     .badge {
         display:inline-flex;
         align-items:center;
         justify-content:center;
-        min-width:44px;
-        height:34px;
-        padding:6px 12px;
+        min-width:48px;
+        height:36px;
+        padding:6px 14px;
         background: linear-gradient(90deg,#ffffff,#f3f3f3);
         color:#04121a;
         border-radius:999px;
         font-weight:800;
-        box-shadow: 0 8px 20px rgba(2,6,23,0.45);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.45), 0 0 18px rgba(0,255,209,0.06);
         transform-origin:center;
         animation: pop 700ms cubic-bezier(.2,.9,.3,1);
     }
     @keyframes pop {
-        0% { transform: scale(.6); opacity:0; }
-        60% { transform: scale(1.08); opacity:1; }
-        100% { transform: scale(1); }
+        0% { transform: translateY(6px) scale(.92); opacity:0; filter: blur(6px); }
+        60% { transform: translateY(-2px) scale(1.04); opacity:1; filter: blur(0); }
+        100% { transform: translateY(0) scale(1); }
     }
 
     /* MRZ block (glass + OCR feel) */
     .mrz {
-        background: linear-gradient(90deg, rgba(2,8,20,0.9), rgba(6,12,30,0.9));
+        background: linear-gradient(90deg, rgba(2,8,20,0.92), rgba(6,12,30,0.92));
         border-radius: 14px;
         padding: 14px;
         font-family: 'OCR-B', monospace;
@@ -170,7 +171,9 @@ if submit:
         font-size:18px;
         border: 1px solid rgba(0,255,156,0.06);
         box-shadow: inset 0 -6px 18px rgba(0,0,0,0.35);
+        transition: transform 220ms ease;
     }
+    .mrz:hover { transform: translateY(-4px); }
 
     .mrz .line {
         display:block;
@@ -178,30 +181,31 @@ if submit:
         overflow:auto;
     }
 
-    /* Copy button */
+    /* Copy button with microinteraction */
     .copy-btn {
         background: linear-gradient(90deg,#00ffd1,#7be3ff);
         color:#00121a;
         border:none;
-        padding:8px 14px;
+        padding:10px 16px;
         border-radius:12px;
         cursor:pointer;
         font-weight:800;
-        box-shadow: 0 10px 30px rgba(0,255,209,0.08);
-        transition: transform 160ms ease, box-shadow 160ms ease;
+        box-shadow: 0 12px 36px rgba(0,255,209,0.08);
+        transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms;
     }
-    .copy-btn:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(0,255,209,0.12); }
-    .copy-btn:active { transform: translateY(0); }
+    .copy-btn:hover { transform: translateY(-3px); box-shadow: 0 22px 48px rgba(0,255,209,0.12); }
+    .copy-btn:active { transform: translateY(0); opacity:0.95; }
 
     /* Final MRZ pre */
     pre.mrz-pre {
-        background: rgba(0,0,0,0.28);
+        background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.22));
         padding:12px;
         border-radius:10px;
         color:#bfffdc;
         font-family:'OCR-B', monospace;
         overflow:auto;
         border: 1px solid rgba(255,255,255,0.02);
+        margin-top:10px;
     }
 
     /* Global check highlight with subtle animation */
@@ -223,19 +227,20 @@ if submit:
         height:4px;
         background: linear-gradient(90deg,#00ffd1,#7be3ff);
         border-radius:4px;
-        animation: slide 1.6s infinite linear;
-        opacity:0.9;
+        animation: slide 1.8s infinite linear;
+        opacity:0.95;
     }
     @keyframes slide {
-        0% { transform: translateX(-50%) translateX(-30px); opacity:0.6; }
-        50% { transform: translateX(-50%) translateX(30px); opacity:1; }
-        100% { transform: translateX(-50%) translateX(-30px); opacity:0.6; }
+        0% { transform: translateX(-50%) translateX(-28px); opacity:0.6; }
+        50% { transform: translateX(-50%) translateX(28px); opacity:1; }
+        100% { transform: translateX(-50%) translateX(-28px); opacity:0.6; }
     }
 
-    /* Responsive */
+    /* Small responsive tweaks */
     @media (max-width: 720px) {
         .card { width: 94% !important; margin-left:auto; margin-right:auto; }
         .mrz { font-size:16px; letter-spacing:2px; }
+        .badge { min-width:40px; height:32px; padding:6px 10px; }
     }
     </style>
 
@@ -269,7 +274,7 @@ if submit:
     final_mrz_safe = html.escape(final_mrz)
 
     st.markdown(f"""
-    <div class="card" style="max-width:640px;">
+    <div class="card" style="max-width:720px;">
         <h3>Résultats détaillés</h3>
         <div class="detail-row"><div><div class="label">Passport</div><div class="muted">{safe_passport}</div></div><div class="badge">{passport_check}</div></div>
         <div class="detail-row"><div><div class="label">Birth</div><div class="muted">{safe_birth}</div></div><div class="badge">{birth_check}</div></div>
@@ -278,7 +283,7 @@ if submit:
         <div class="global">Checksum global : {global_check}</div>
     </div>
 
-    <div class="card" style="max-width:640px;">
+    <div class="card" style="max-width:720px;">
         <h3>Aperçu MRZ</h3>
         <div class="mrz">
             <span class="line">{html.escape(part_passport)}  |  {html.escape(nationality)}  |  {html.escape(birth + str(birth_check) + sex + expiry + str(expiry_check))}</span>
