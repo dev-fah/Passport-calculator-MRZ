@@ -46,7 +46,7 @@ with st.form("mrz_form"):
 
     with col2:
         optional_in = st.text_input("Optional", "<<<<<<<<<<<<<<")
-        st.markdown("<div style='font-size:12px;color:#9fbfe8;margin-top:6px;'>Astuce: utilisez &lt; pour remplir</div>", unsafe_allow_html=True)
+        st.markdown("<div style='font-size:12px;color:#2b6ea3;margin-top:6px;'>Astuce: utilisez &lt; pour remplir</div>", unsafe_allow_html=True)
     
     submit = st.form_submit_button("Calculer")
 
@@ -88,139 +88,128 @@ if submit:
     final_mrz = global_string + str(global_check)
 
     # ===== STYLE / HTML / JS (UNIQUEMENT L'APPARENCE) =====
-    # On remplace uniquement l'affichage et le style, sans toucher la logique.
+    # Thème plus clair et contrasté, cartes claires sur fond doux, animations subtiles.
     st.markdown("""
     <style>
-    /* Page background */
+    /* Page background: doux, pas tout noir */
     .stApp {
-      background: radial-gradient(800px 400px at 10% 10%, rgba(6,18,34,0.55), transparent 8%),
-                  radial-gradient(700px 350px at 90% 90%, rgba(2,40,60,0.45), transparent 10%),
-                  linear-gradient(180deg,#071021 0%, #0b1220 100%);
-      color-scheme: dark;
+      background: linear-gradient(180deg, #f5f7fb 0%, #e9eef6 50%, #f0f4fb 100%);
+      color-scheme: light;
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
     }
 
-    /* Card container */
+    /* Container cards: clair, bord arrondi, ombre douce */
     .card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius: 18px;
-      padding: 20px;
+      background: linear-gradient(180deg, #ffffff, #fbfdff);
+      border-radius: 14px;
+      padding: 18px;
       margin-bottom: 18px;
-      color: #e9fff4;
-      box-shadow: 0 12px 40px rgba(2,6,23,0.6);
-      border: 1px solid rgba(255,255,255,0.03);
-      transition: transform .26s cubic-bezier(.2,.9,.3,1), box-shadow .26s;
+      color: #0b1b2b;
+      box-shadow: 0 8px 30px rgba(15, 30, 50, 0.08);
+      border: 1px solid rgba(13, 37, 63, 0.06);
+      transition: transform .22s cubic-bezier(.2,.9,.3,1), box-shadow .22s;
     }
-    .card:hover { transform: translateY(-6px); box-shadow: 0 28px 80px rgba(2,6,23,0.75); }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 18px 50px rgba(15, 30, 50, 0.12); }
 
-    .card h3 { margin:0 0 12px 0; color:#bfffe0; font-size:18px; }
+    .card h3 { margin:0 0 12px 0; color:#0b3b5a; font-size:18px; }
 
     /* Detail rows */
     .detail-row {
       display:flex; justify-content:space-between; align-items:center;
-      gap:12px; padding:10px 0; border-bottom:1px dashed rgba(255,255,255,0.03);
+      gap:12px; padding:10px 0; border-bottom:1px dashed rgba(11,27,43,0.04);
     }
-    .label { color:#7be3ff; font-weight:700; font-size:14px; }
-    .muted { color:#9fd8ff; font-size:13px; }
+    .label { color:#0b6ea3; font-weight:700; font-size:14px; }
+    .muted { color:#4b6b88; font-size:13px; }
 
-    /* Badge */
+    /* Badge: clair, lisible */
     .badge {
       display:inline-flex; align-items:center; justify-content:center;
       min-width:48px; height:36px; padding:6px 14px;
-      background: linear-gradient(90deg,#ffffff,#f3f3f3);
-      color:#04121a; border-radius:999px; font-weight:800;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.45), 0 0 18px rgba(0,255,209,0.06);
-      animation: pop 700ms cubic-bezier(.2,.9,.3,1);
+      background: linear-gradient(90deg,#f0f6ff,#e6f3ff);
+      color:#042033; border-radius:999px; font-weight:800;
+      box-shadow: 0 6px 18px rgba(2,24,40,0.06);
+      animation: pop 600ms cubic-bezier(.2,.9,.3,1);
     }
     @keyframes pop {
-      0% { transform: translateY(6px) scale(.92); opacity:0; filter: blur(6px); }
-      60% { transform: translateY(-2px) scale(1.04); opacity:1; filter: blur(0); }
+      0% { transform: translateY(6px) scale(.96); opacity:0; }
+      60% { transform: translateY(-2px) scale(1.02); opacity:1; }
       100% { transform: translateY(0) scale(1); }
     }
 
-    /* MRZ block */
+    /* MRZ block: clair avec police OCR feel, texte sombre sur fond doux */
     .mrz {
-      background: linear-gradient(90deg, rgba(2,8,20,0.92), rgba(6,12,30,0.92));
-      border-radius: 14px;
-      padding: 14px;
+      background: linear-gradient(180deg, #f7fbff, #eef6ff);
+      border-radius: 10px;
+      padding: 12px;
       font-family: 'OCR-B', monospace;
-      color:#00ff9c;
+      color:#0b3b5a;
       letter-spacing:3px;
-      font-size:18px;
-      border: 1px solid rgba(0,255,156,0.06);
-      box-shadow: inset 0 -6px 18px rgba(0,0,0,0.35);
-      transition: transform 220ms ease;
+      font-size:16px;
+      border: 1px solid rgba(11,110,163,0.06);
+      box-shadow: inset 0 -4px 12px rgba(0,0,0,0.02);
+      transition: transform 180ms ease;
     }
-    .mrz:hover { transform: translateY(-4px); }
+    .mrz:hover { transform: translateY(-3px); }
     .mrz .line { display:block; white-space:nowrap; overflow:auto; }
 
-    /* Mask overlay to hide MRZ by default */
+    /* Mask overlay to hide MRZ by default (subtil, clair) */
     .mrz-mask {
       position:relative;
-      border-radius:10px;
+      border-radius:8px;
       overflow:hidden;
     }
     .mrz-mask .overlay {
       position:absolute; inset:0;
       display:flex; align-items:center; justify-content:center;
-      background: linear-gradient(90deg, rgba(0,0,0,0.55), rgba(0,0,0,0.45));
-      color: rgba(255,255,255,0.12);
+      background: linear-gradient(90deg, rgba(255,255,255,0.85), rgba(255,255,255,0.82));
+      color: rgba(11,27,43,0.12);
       font-family:'OCR-B', monospace;
       letter-spacing:6px;
-      font-size:18px;
+      font-size:16px;
     }
 
     /* Revealed state */
-    .revealed { color:#00ff9c !important; }
+    .revealed { color:#0b3b5a !important; }
     .revealed .overlay { display:none; }
 
-    /* Buttons */
+    /* Buttons: style moderne, accessible */
     .btn {
       display:inline-flex; align-items:center; gap:8px;
-      padding:8px 14px; border-radius:12px; cursor:pointer; border:none;
+      padding:8px 14px; border-radius:10px; cursor:pointer; border:none;
       font-weight:700;
     }
     .btn-ghost {
-      background: rgba(255,255,255,0.03); color:#bfffdc; border:1px solid rgba(255,255,255,0.04);
+      background: transparent; color:#0b3b5a; border:1px solid rgba(11,110,163,0.08);
     }
     .btn-primary {
-      background: linear-gradient(90deg,#00ffd1,#7be3ff); color:#00121a;
-      box-shadow: 0 12px 36px rgba(0,255,209,0.08);
+      background: linear-gradient(90deg,#0b9bd6,#0b6ea3); color:#fff;
+      box-shadow: 0 8px 24px rgba(11,110,163,0.12);
     }
+    .btn-primary:hover { transform: translateY(-2px); }
 
     /* MRZ pre (hidden by default) */
     pre.mrz-pre {
-      background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.22));
-      padding:12px; border-radius:10px; color:#bfffdc;
-      font-family:'OCR-B', monospace; overflow:auto; border:1px solid rgba(255,255,255,0.02);
+      background: #f3f7fb;
+      padding:12px; border-radius:8px; color:#0b3b5a;
+      font-family:'OCR-B', monospace; overflow:auto; border:1px solid rgba(11,110,163,0.04);
       margin-top:10px; display:none;
     }
 
     /* Global highlight */
     .global {
-      text-align:center; margin-top:12px; font-size:20px; font-weight:800; color:#00ffd1; position:relative;
-    }
-    .global::after {
-      content: ""; position:absolute; left:50%; transform:translateX(-50%); bottom:-10px;
-      width:80px; height:4px; background: linear-gradient(90deg,#00ffd1,#7be3ff); border-radius:4px;
-      animation: slide 1.8s infinite linear; opacity:0.95;
-    }
-    @keyframes slide {
-      0% { transform: translateX(-50%) translateX(-28px); opacity:0.6; }
-      50% { transform: translateX(-50%) translateX(28px); opacity:1; }
-      100% { transform: translateX(-50%) translateX(-28px); opacity:0.6; }
+      text-align:center; margin-top:12px; font-size:18px; font-weight:800; color:#0b6ea3; position:relative;
     }
 
     /* Responsive */
     @media (max-width:720px) {
       .card { width:94% !important; margin-left:auto; margin-right:auto; }
-      .mrz { font-size:16px; letter-spacing:2px; }
+      .mrz { font-size:15px; letter-spacing:2px; }
       .badge { min-width:40px; height:32px; padding:6px 10px; }
     }
     </style>
 
     <script>
-    /* Helpers: reveal + copy */
+    /* Helpers: reveal + copy (fonctionne côté client) */
     function toggleReveal(btnId, blockId, preId) {
       const btn = document.getElementById(btnId);
       const block = document.getElementById(blockId);
@@ -245,7 +234,7 @@ if submit:
         const old = btn.innerText;
         btn.innerText = 'Copié ✓';
         btn.disabled = true;
-        setTimeout(function(){ btn.innerText = old; btn.disabled = false; }, 1400);
+        setTimeout(function(){ btn.innerText = old; btn.disabled = false; }, 1200);
       }, function() {
         alert('Impossible de copier automatiquement. Sélectionnez et copiez manuellement.');
       });
@@ -258,13 +247,10 @@ if submit:
     safe_birth = html.escape(birth)
     safe_expiry = html.escape(expiry)
     safe_optional = html.escape(optional)
-    safe_part_passport = html.escape(part_passport)
-    safe_part_dates = html.escape(birth + str(birth_check) + sex + expiry + str(expiry_check))
-    safe_part_optional = html.escape(part_optional)
     final_mrz_safe = html.escape(final_mrz)
 
     st.markdown(f"""
-    <div class="card" style="max-width:720px;">
+    <div class="card" style="max-width:760px;">
       <h3>Résultats détaillés</h3>
 
       <div class="detail-row">
@@ -300,10 +286,10 @@ if submit:
       </div>
 
       <div class="global">Checksum global : {global_check}</div>
-      <div style="font-size:13px;color:#9fd8ff;margin-top:8px;">La MRZ est masquée par défaut pour protéger les données. Cliquez sur "Afficher MRZ" pour la révéler.</div>
+      <div style="font-size:13px;color:#4b6b88;margin-top:8px;">La MRZ est masquée par défaut pour protéger les données. Cliquez sur "Afficher MRZ" pour la révéler.</div>
     </div>
 
-    <div class="card" style="max-width:720px;">
+    <div class="card" style="max-width:760px;">
       <h3>Aperçu MRZ</h3>
 
       <div id="mrzBlock" class="mrz mrz-mask" style="margin-bottom:10px;">
@@ -315,10 +301,10 @@ if submit:
       <div style="display:flex; gap:10px; align-items:center; margin-top:6px;">
         <button id="revealBtn" class="btn btn-ghost" onclick="toggleReveal('revealBtn','mrzBlock','mrzPre')">Afficher MRZ</button>
         <button class="btn btn-primary" onclick="copyMRZ(`{final_mrz_safe}`, this)">Copier MRZ</button>
-        <div style="font-family:monospace; color:#bfffdc; padding:8px 12px; border-radius:10px; background:rgba(0,0,0,0.22);">Global: <strong style="margin-left:8px;">{global_check}</strong></div>
+        <div style="font-family:monospace; color:#0b3b5a; padding:8px 12px; border-radius:8px; background:#f3f7fb;">Global: <strong style="margin-left:8px;">{global_check}</strong></div>
       </div>
 
-      <div style="margin-top:12px; font-size:13px; color:#9fd8ff;">Ligne MRZ complète (masquée par défaut)</div>
+      <div style="margin-top:12px; font-size:13px; color:#4b6b88;">Ligne MRZ complète (masquée par défaut)</div>
       <pre id="mrzPre" class="mrz-pre">{final_mrz_safe}</pre>
     </div>
     """, unsafe_allow_html=True)
