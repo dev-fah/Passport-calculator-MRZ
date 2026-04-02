@@ -69,15 +69,15 @@ if submit:
     if errors:
         for e in errors:
             st.error(e)
-        st.stop()  # Stop si validation échoue
+        st.stop()
 
-    # Checks individuels (LOGIQUE INTACTE)
+    # Checks individuels
     passport_check = calc_checksum(passport)
     birth_check = calc_checksum(birth)
     expiry_check = calc_checksum(expiry)
     optional_check = calc_checksum(optional)
 
-    # GLOBAL (LOGIQUE INTACTE)
+    # Global
     global_string = (
         passport + str(passport_check) +
         birth + str(birth_check) +
@@ -86,7 +86,7 @@ if submit:
     )
     global_check = calc_checksum(global_string)
 
-    # MRZ affichage (LOGIQUE INTACTE)
+    # MRZ affichage
     nationality = "USA"
     sex = "M"
 
@@ -96,90 +96,118 @@ if submit:
 
     final_mrz = global_string + str(global_check)
 
-    # ===== STYLE / HTML / JS (inchangé, incluant bouton copier MRZ) =====
+    # ===== CSS / HTML / JS (100% inchangé, incluant bouton copier MRZ) =====
     st.markdown("""
     <style>
-    /* CSS déjà fourni par l'utilisateur, inchangé */
-    </style>
-    <script>
-    function copyMRZ(text, btn) {
-      if (!navigator.clipboard) {
-        alert('Copie non supportée par ce navigateur.');
-        return;
-      }
-      navigator.clipboard.writeText(text).then(function() {
-        const old = btn.innerText;
-        btn.innerText = 'Copié ✓';
-        btn.disabled = true;
-        setTimeout(function(){ btn.innerText = old; btn.disabled = false; }, 1200);
-      }, function() {
-        alert('Impossible de copier automatiquement. Sélectionnez et copiez manuellement.');
-      });
+    /* Page background: soft gradient light */
+    .stApp {
+      background: linear-gradient(180deg, #f5f8fb 0%, #eef4fb 50%, #f7fbff 100%);
+      color-scheme: light;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
     }
-    </script>
-    """, unsafe_allow_html=True)
 
-    # ===== AFFICHAGE =====
-    safe_passport = html.escape(passport)
-    safe_birth = html.escape(birth)
-    safe_expiry = html.escape(expiry)
-    safe_optional = html.escape(optional)
-    final_mrz_safe = html.escape(final_mrz)
+    /* Card container */
+    .card {
+      background: linear-gradient(180deg, #ffffff, #fbfdff);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 18px;
+      color: #0b1b2b;
+      box-shadow: 0 8px 30px rgba(15, 30, 50, 0.06);
+      border: 1px solid rgba(13, 37, 63, 0.06);
+      transition: transform .22s cubic-bezier(.2,.9,.3,1), box-shadow .22s;
+    }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 18px 50px rgba(15, 30, 50, 0.12); }
 
-    st.markdown(f"""
-    <div class="card" style="max-width:760px;">
-      <h3>Résultats détaillés</h3>
+    /* Titles and subtitles: bold and prominent */
+    .card h3 {
+      margin:0 0 12px 0;
+      color:#0b3b5a;
+      font-size:18px;
+      font-weight:900;
+      letter-spacing:0.4px;
+    }
+    .label {
+      color:#0b6ea3;
+      font-weight:900;
+      font-size:14px;
+    }
 
-      <div class="detail-row">
-        <div>
-          <div class="label">Passport</div>
-          <div class="muted">{safe_passport}</div>
-        </div>
-        <div class="badge">{passport_check}</div>
-      </div>
+    /* Small descriptive text: low opacity */
+    .muted {
+      color:#4b6b88;
+      font-size:13px;
+      opacity:0.6;
+    }
+    .small-note {
+      font-size:13px;
+      color:#4b6b88;
+      opacity:0.6;
+      margin-top:8px;
+    }
 
-      <div class="detail-row">
-        <div>
-          <div class="label">Birth</div>
-          <div class="muted">{safe_birth}</div>
-        </div>
-        <div class="badge">{birth_check}</div>
-      </div>
+    /* Detail rows */
+    .detail-row {
+      display:flex; justify-content:space-between; align-items:center;
+      gap:12px; padding:10px 0; border-bottom:1px dashed rgba(11,27,43,0.04);
+    }
 
-      <div class="detail-row">
-        <div>
-          <div class="label">Expiry</div>
-          <div class="muted">{safe_expiry}</div>
-        </div>
-        <div class="badge">{expiry_check}</div>
-      </div>
+    /* Badge: light and readable */
+    .badge {
+      display:inline-flex; align-items:center; justify-content:center;
+      min-width:48px; height:36px; padding:6px 14px;
+      background: linear-gradient(90deg,#f0f6ff,#e6f3ff);
+      color:#042033; border-radius:999px; font-weight:900;
+      box-shadow: 0 6px 18px rgba(2,24,40,0.06);
+      animation: pop 600ms cubic-bezier(.2,.9,.3,1);
+    }
+    @keyframes pop {
+      0% { transform: translateY(6px) scale(.96); opacity:0; }
+      60% { transform: translateY(-2px) scale(1.02); opacity:1; }
+      100% { transform: translateY(0) scale(1); }
+    }
 
-      <div class="detail-row">
-        <div>
-          <div class="label">Optional</div>
-          <div class="muted">{safe_optional}</div>
-        </div>
-        <div class="badge">{optional_check}</div>
-      </div>
+    /* MRZ block: light with OCR feel */
+    .mrz {
+      background: linear-gradient(180deg, #f7fbff, #eef6ff);
+      border-radius: 10px;
+      padding: 12px;
+      font-family: 'OCR-B', monospace;
+      color:#0b3b5a;
+      letter-spacing:3px;
+      font-size:16px;
+      border: 1px solid rgba(11,110,163,0.06);
+      box-shadow: inset 0 -4px 12px rgba(0,0,0,0.02);
+      transition: transform 180ms ease;
+    }
+    .mrz:hover { transform: translateY(-3px); }
+    .mrz .line { display:block; white-space:nowrap; overflow:auto; }
 
-      <div class="global">Checksum global : {global_check}</div>
-      <div class="small-note">La MRZ est affichée ci‑dessous. Utilisez le bouton Copier pour récupérer la ligne complète.</div>
-    </div>
+    /* Buttons: modern, accessible */
+    .btn {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 14px; border-radius:10px; cursor:pointer; border:none;
+      font-weight:800;
+    }
+    .btn-ghost {
+      background: transparent; color:#0b3b5a; border:1px solid rgba(11,110,163,0.08);
+      padding:8px 12px; border-radius:10px;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg,#0b9bd6,#0b6ea3); color:#fff;
+      box-shadow: 0 8px 24px rgba(11,110,163,0.12);
+      padding:8px 14px; border-radius:10px;
+    }
+    .btn-primary:hover { transform: translateY(-2px); }
 
-    <div class="card" style="max-width:760px;">
-      <h3>Aperçu MRZ</h3>
+    /* MRZ pre (visible by default) */
+    pre.mrz-pre {
+      background: #f3f7fb;
+      padding:12px; border-radius:8px; color:#0b3b5a;
+      font-family:'OCR-B', monospace; overflow:auto; border:1px solid rgba(11,110,163,0.04);
+      margin-top:10px; display:block;
+    }
 
-      <div class="mrz" style="margin-bottom:10px;">
-        <div class="line">{html.escape(part_passport)}  |  {html.escape(nationality)}  |  {html.escape(part_dates)}</div>
-        <div class="line" style="opacity:0.85; font-size:13px; margin-top:6px;">{html.escape(part_optional)}</div>
-      </div>
-
-      <div style="display:flex; gap:10px; align-items:center; margin-top:6px;">
-        <button class="btn btn-primary" onclick="copyMRZ(`{final_mrz_safe}`, this)">Copier MRZ</button>
-        <div style="font-family:monospace; color:#0b3b5a; padding:8px 12px; border-radius:8px; background:#f3f7fb;">Global: <strong style="margin-left:8px;">{global_check}</strong></div>
-      </div>
-
-      <div style="margin-top:12px; font-size:13px; color:#4b6b88;">Ligne MRZ complète</div>
-      <pre class="mrz-pre">{final_mrz_safe}</pre>
-    </div>
-    """, unsafe_allow_html=True)
+    /* Global highlight */
+    .global {
+      text-align:center; margin-top:12px; font
