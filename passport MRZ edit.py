@@ -6,7 +6,7 @@ import re
 st.set_page_config(page_title="Calculateur MRZ Passport", layout="centered")
 st.title("Calculateur MRZ Passport")
 
-# ===== FONCTIONS (TA VERSION = CORRECTE) =====
+# ===== FONCTIONS (LOGIQUE INCHANGÉE) =====
 def char_to_value(c):
     if c.isdigit():
         return int(c)
@@ -46,6 +46,7 @@ with st.form("mrz_form"):
 
     with col2:
         optional_in = st.text_input("Optional", "<<<<<<<<<<<<<<")
+        st.markdown("<div style='font-size:12px;color:#9fbfe8;margin-top:6px;'>Astuce: utilisez &lt; pour remplir</div>", unsafe_allow_html=True)
     
     submit = st.form_submit_button("Calculer")
 
@@ -61,13 +62,13 @@ if submit:
             st.error(e)
         st.stop()
 
-    # Checks individuels (TA LOGIQUE)
+    # Checks individuels (LOGIQUE INTACTE)
     passport_check = calc_checksum(passport)
     birth_check = calc_checksum(birth)
     expiry_check = calc_checksum(expiry)
     optional_check = calc_checksum(optional)
 
-    # GLOBAL (TA LOGIQUE EXACTE)
+    # GLOBAL (LOGIQUE INTACTE)
     global_string = (
         passport + str(passport_check) +
         birth + str(birth_check) +
@@ -76,7 +77,7 @@ if submit:
     )
     global_check = calc_checksum(global_string)
 
-    # MRZ affichage
+    # MRZ affichage (LOGIQUE INTACTE)
     nationality = "USA"
     sex = "M"
 
@@ -86,184 +87,173 @@ if submit:
 
     final_mrz = global_string + str(global_check)
 
-    # ===== CSS AMÉLIORÉ (UNIQUEMENT STYLE / ANIMATIONS) =====
+    # ===== STYLE / HTML / JS (UNIQUEMENT L'APPARENCE) =====
+    # On remplace uniquement l'affichage et le style, sans toucher la logique.
     st.markdown("""
     <style>
-    /* Page background subtle gradient */
+    /* Page background */
     .stApp {
-        background: radial-gradient(1200px 600px at 10% 10%, rgba(6,18,34,0.6), transparent 10%),
-                    radial-gradient(1000px 500px at 90% 90%, rgba(2,40,60,0.55), transparent 12%),
-                    linear-gradient(180deg, #071021 0%, #0b1220 100%);
-        color-scheme: dark;
-        font-synthesis: none;
+      background: radial-gradient(800px 400px at 10% 10%, rgba(6,18,34,0.55), transparent 8%),
+                  radial-gradient(700px 350px at 90% 90%, rgba(2,40,60,0.45), transparent 10%),
+                  linear-gradient(180deg,#071021 0%, #0b1220 100%);
+      color-scheme: dark;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
     }
 
-    /* Card base */
+    /* Card container */
     .card {
-        background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-        border-radius: 20px;
-        padding: 22px;
-        margin-bottom: 18px;
-        color: #e9fff4;
-        box-shadow: 0 12px 40px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-        border: 1px solid rgba(255,255,255,0.03);
-        transition: transform 260ms cubic-bezier(.2,.9,.3,1), box-shadow 260ms;
-        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 18px;
+      color: #e9fff4;
+      box-shadow: 0 12px 40px rgba(2,6,23,0.6);
+      border: 1px solid rgba(255,255,255,0.03);
+      transition: transform .26s cubic-bezier(.2,.9,.3,1), box-shadow .26s;
     }
     .card:hover { transform: translateY(-6px); box-shadow: 0 28px 80px rgba(2,6,23,0.75); }
 
-    .card h3 {
-        margin: 0 0 12px 0;
-        color: #bfffe0;
-        font-size: 18px;
-        letter-spacing: 0.4px;
-    }
+    .card h3 { margin:0 0 12px 0; color:#bfffe0; font-size:18px; }
 
     /* Detail rows */
     .detail-row {
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        gap:12px;
-        padding:10px 0;
-        border-bottom: 1px dashed rgba(255,255,255,0.03);
+      display:flex; justify-content:space-between; align-items:center;
+      gap:12px; padding:10px 0; border-bottom:1px dashed rgba(255,255,255,0.03);
     }
-    .label {
-        color:#7be3ff;
-        font-weight:700;
-        font-size:14px;
-    }
-    .muted {
-        color:#9fd8ff;
-        font-size:13px;
-    }
+    .label { color:#7be3ff; font-weight:700; font-size:14px; }
+    .muted { color:#9fd8ff; font-size:13px; }
 
-    /* Animated badge with soft glow */
+    /* Badge */
     .badge {
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        min-width:48px;
-        height:36px;
-        padding:6px 14px;
-        background: linear-gradient(90deg,#ffffff,#f3f3f3);
-        color:#04121a;
-        border-radius:999px;
-        font-weight:800;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.45), 0 0 18px rgba(0,255,209,0.06);
-        transform-origin:center;
-        animation: pop 700ms cubic-bezier(.2,.9,.3,1);
+      display:inline-flex; align-items:center; justify-content:center;
+      min-width:48px; height:36px; padding:6px 14px;
+      background: linear-gradient(90deg,#ffffff,#f3f3f3);
+      color:#04121a; border-radius:999px; font-weight:800;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45), 0 0 18px rgba(0,255,209,0.06);
+      animation: pop 700ms cubic-bezier(.2,.9,.3,1);
     }
     @keyframes pop {
-        0% { transform: translateY(6px) scale(.92); opacity:0; filter: blur(6px); }
-        60% { transform: translateY(-2px) scale(1.04); opacity:1; filter: blur(0); }
-        100% { transform: translateY(0) scale(1); }
+      0% { transform: translateY(6px) scale(.92); opacity:0; filter: blur(6px); }
+      60% { transform: translateY(-2px) scale(1.04); opacity:1; filter: blur(0); }
+      100% { transform: translateY(0) scale(1); }
     }
 
-    /* MRZ block (glass + OCR feel) */
+    /* MRZ block */
     .mrz {
-        background: linear-gradient(90deg, rgba(2,8,20,0.92), rgba(6,12,30,0.92));
-        border-radius: 14px;
-        padding: 14px;
-        font-family: 'OCR-B', monospace;
-        color:#00ff9c;
-        letter-spacing:3px;
-        font-size:18px;
-        border: 1px solid rgba(0,255,156,0.06);
-        box-shadow: inset 0 -6px 18px rgba(0,0,0,0.35);
-        transition: transform 220ms ease;
+      background: linear-gradient(90deg, rgba(2,8,20,0.92), rgba(6,12,30,0.92));
+      border-radius: 14px;
+      padding: 14px;
+      font-family: 'OCR-B', monospace;
+      color:#00ff9c;
+      letter-spacing:3px;
+      font-size:18px;
+      border: 1px solid rgba(0,255,156,0.06);
+      box-shadow: inset 0 -6px 18px rgba(0,0,0,0.35);
+      transition: transform 220ms ease;
     }
     .mrz:hover { transform: translateY(-4px); }
+    .mrz .line { display:block; white-space:nowrap; overflow:auto; }
 
-    .mrz .line {
-        display:block;
-        white-space:nowrap;
-        overflow:auto;
+    /* Mask overlay to hide MRZ by default */
+    .mrz-mask {
+      position:relative;
+      border-radius:10px;
+      overflow:hidden;
+    }
+    .mrz-mask .overlay {
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(90deg, rgba(0,0,0,0.55), rgba(0,0,0,0.45));
+      color: rgba(255,255,255,0.12);
+      font-family:'OCR-B', monospace;
+      letter-spacing:6px;
+      font-size:18px;
     }
 
-    /* Copy button with microinteraction */
-    .copy-btn {
-        background: linear-gradient(90deg,#00ffd1,#7be3ff);
-        color:#00121a;
-        border:none;
-        padding:10px 16px;
-        border-radius:12px;
-        cursor:pointer;
-        font-weight:800;
-        box-shadow: 0 12px 36px rgba(0,255,209,0.08);
-        transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms;
-    }
-    .copy-btn:hover { transform: translateY(-3px); box-shadow: 0 22px 48px rgba(0,255,209,0.12); }
-    .copy-btn:active { transform: translateY(0); opacity:0.95; }
+    /* Revealed state */
+    .revealed { color:#00ff9c !important; }
+    .revealed .overlay { display:none; }
 
-    /* Final MRZ pre */
+    /* Buttons */
+    .btn {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 14px; border-radius:12px; cursor:pointer; border:none;
+      font-weight:700;
+    }
+    .btn-ghost {
+      background: rgba(255,255,255,0.03); color:#bfffdc; border:1px solid rgba(255,255,255,0.04);
+    }
+    .btn-primary {
+      background: linear-gradient(90deg,#00ffd1,#7be3ff); color:#00121a;
+      box-shadow: 0 12px 36px rgba(0,255,209,0.08);
+    }
+
+    /* MRZ pre (hidden by default) */
     pre.mrz-pre {
-        background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.22));
-        padding:12px;
-        border-radius:10px;
-        color:#bfffdc;
-        font-family:'OCR-B', monospace;
-        overflow:auto;
-        border: 1px solid rgba(255,255,255,0.02);
-        margin-top:10px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.22));
+      padding:12px; border-radius:10px; color:#bfffdc;
+      font-family:'OCR-B', monospace; overflow:auto; border:1px solid rgba(255,255,255,0.02);
+      margin-top:10px; display:none;
     }
 
-    /* Global check highlight with subtle animation */
+    /* Global highlight */
     .global {
-        text-align:center;
-        margin-top:12px;
-        font-size:20px;
-        font-weight:800;
-        color:#00ffd1;
-        position:relative;
+      text-align:center; margin-top:12px; font-size:20px; font-weight:800; color:#00ffd1; position:relative;
     }
     .global::after {
-        content: "";
-        position:absolute;
-        left:50%;
-        transform:translateX(-50%);
-        bottom:-10px;
-        width:80px;
-        height:4px;
-        background: linear-gradient(90deg,#00ffd1,#7be3ff);
-        border-radius:4px;
-        animation: slide 1.8s infinite linear;
-        opacity:0.95;
+      content: ""; position:absolute; left:50%; transform:translateX(-50%); bottom:-10px;
+      width:80px; height:4px; background: linear-gradient(90deg,#00ffd1,#7be3ff); border-radius:4px;
+      animation: slide 1.8s infinite linear; opacity:0.95;
     }
     @keyframes slide {
-        0% { transform: translateX(-50%) translateX(-28px); opacity:0.6; }
-        50% { transform: translateX(-50%) translateX(28px); opacity:1; }
-        100% { transform: translateX(-50%) translateX(-28px); opacity:0.6; }
+      0% { transform: translateX(-50%) translateX(-28px); opacity:0.6; }
+      50% { transform: translateX(-50%) translateX(28px); opacity:1; }
+      100% { transform: translateX(-50%) translateX(-28px); opacity:0.6; }
     }
 
-    /* Small responsive tweaks */
-    @media (max-width: 720px) {
-        .card { width: 94% !important; margin-left:auto; margin-right:auto; }
-        .mrz { font-size:16px; letter-spacing:2px; }
-        .badge { min-width:40px; height:32px; padding:6px 10px; }
+    /* Responsive */
+    @media (max-width:720px) {
+      .card { width:94% !important; margin-left:auto; margin-right:auto; }
+      .mrz { font-size:16px; letter-spacing:2px; }
+      .badge { min-width:40px; height:32px; padding:6px 10px; }
     }
     </style>
 
-    <!-- Small JS helper for copy feedback -->
     <script>
-    function copyToClipboard(text, btn) {
-        if (!navigator.clipboard) {
-            alert('Copie non supportée par ce navigateur.');
-            return;
-        }
-        navigator.clipboard.writeText(text).then(function() {
-            const old = btn.innerText;
-            btn.innerText = 'Copié ✓';
-            btn.disabled = true;
-            setTimeout(function(){ btn.innerText = old; btn.disabled = false; }, 1400);
-        }, function() {
-            alert('Impossible de copier automatiquement. Sélectionnez et copiez manuellement.');
-        });
+    /* Helpers: reveal + copy */
+    function toggleReveal(btnId, blockId, preId) {
+      const btn = document.getElementById(btnId);
+      const block = document.getElementById(blockId);
+      const pre = document.getElementById(preId);
+      if (!block.classList.contains('revealed')) {
+        block.classList.add('revealed');
+        btn.innerText = 'Cacher MRZ';
+        pre.style.display = 'block';
+      } else {
+        block.classList.remove('revealed');
+        btn.innerText = 'Afficher MRZ';
+        pre.style.display = 'none';
+      }
+    }
+
+    function copyMRZ(text, btn) {
+      if (!navigator.clipboard) {
+        alert('Copie non supportée par ce navigateur.');
+        return;
+      }
+      navigator.clipboard.writeText(text).then(function() {
+        const old = btn.innerText;
+        btn.innerText = 'Copié ✓';
+        btn.disabled = true;
+        setTimeout(function(){ btn.innerText = old; btn.disabled = false; }, 1400);
+      }, function() {
+        alert('Impossible de copier automatiquement. Sélectionnez et copiez manuellement.');
+      });
     }
     </script>
     """, unsafe_allow_html=True)
 
-    # ===== UI (même logique, uniquement style modifié) =====
+    # ===== AFFICHAGE (LOGIQUE INTACTE) =====
     safe_passport = html.escape(passport)
     safe_birth = html.escape(birth)
     safe_expiry = html.escape(expiry)
@@ -275,27 +265,60 @@ if submit:
 
     st.markdown(f"""
     <div class="card" style="max-width:720px;">
-        <h3>Résultats détaillés</h3>
-        <div class="detail-row"><div><div class="label">Passport</div><div class="muted">{safe_passport}</div></div><div class="badge">{passport_check}</div></div>
-        <div class="detail-row"><div><div class="label">Birth</div><div class="muted">{safe_birth}</div></div><div class="badge">{birth_check}</div></div>
-        <div class="detail-row"><div><div class="label">Expiry</div><div class="muted">{safe_expiry}</div></div><div class="badge">{expiry_check}</div></div>
-        <div class="detail-row"><div><div class="label">Optional</div><div class="muted">{safe_optional}</div></div><div class="badge">{optional_check}</div></div>
-        <div class="global">Checksum global : {global_check}</div>
+      <h3>Résultats détaillés</h3>
+
+      <div class="detail-row">
+        <div>
+          <div class="label">Passport</div>
+          <div class="muted">{safe_passport}</div>
+        </div>
+        <div class="badge">{passport_check}</div>
+      </div>
+
+      <div class="detail-row">
+        <div>
+          <div class="label">Birth</div>
+          <div class="muted">{safe_birth}</div>
+        </div>
+        <div class="badge">{birth_check}</div>
+      </div>
+
+      <div class="detail-row">
+        <div>
+          <div class="label">Expiry</div>
+          <div class="muted">{safe_expiry}</div>
+        </div>
+        <div class="badge">{expiry_check}</div>
+      </div>
+
+      <div class="detail-row">
+        <div>
+          <div class="label">Optional</div>
+          <div class="muted">{safe_optional}</div>
+        </div>
+        <div class="badge">{optional_check}</div>
+      </div>
+
+      <div class="global">Checksum global : {global_check}</div>
+      <div style="font-size:13px;color:#9fd8ff;margin-top:8px;">La MRZ est masquée par défaut pour protéger les données. Cliquez sur "Afficher MRZ" pour la révéler.</div>
     </div>
 
     <div class="card" style="max-width:720px;">
-        <h3>Aperçu MRZ</h3>
-        <div class="mrz">
-            <span class="line">{html.escape(part_passport)}  |  {html.escape(nationality)}  |  {html.escape(birth + str(birth_check) + sex + expiry + str(expiry_check))}</span>
-            <span class="line" style="opacity:0.85; font-size:13px; margin-top:6px;">{html.escape(part_optional)}</span>
-        </div>
+      <h3>Aperçu MRZ</h3>
 
-        <div style="display:flex; gap:10px; align-items:center; margin-top:12px;">
-            <button class="copy-btn" onclick="copyToClipboard(`{final_mrz_safe}`, this)">Copier MRZ</button>
-            <div style="font-family:monospace; color:#bfffdc; padding:8px 12px; border-radius:10px; background:rgba(0,0,0,0.22);">Global: <strong style="margin-left:8px;">{global_check}</strong></div>
-        </div>
+      <div id="mrzBlock" class="mrz mrz-mask" style="margin-bottom:10px;">
+        <div class="line">{html.escape(part_passport)}  |  {html.escape(nationality)}  |  {html.escape(birth + str(birth_check) + sex + expiry + str(expiry_check))}</div>
+        <div class="line" style="opacity:0.85; font-size:13px; margin-top:6px;">{html.escape(part_optional)}</div>
+        <div class="overlay" style="pointer-events:none;">••••••••••••••••••••••••••••••</div>
+      </div>
 
-        <div style="margin-top:12px; font-size:13px; color:#9fd8ff;">Ligne MRZ complète</div>
-        <pre class="mrz-pre">{final_mrz_safe}</pre>
+      <div style="display:flex; gap:10px; align-items:center; margin-top:6px;">
+        <button id="revealBtn" class="btn btn-ghost" onclick="toggleReveal('revealBtn','mrzBlock','mrzPre')">Afficher MRZ</button>
+        <button class="btn btn-primary" onclick="copyMRZ(`{final_mrz_safe}`, this)">Copier MRZ</button>
+        <div style="font-family:monospace; color:#bfffdc; padding:8px 12px; border-radius:10px; background:rgba(0,0,0,0.22);">Global: <strong style="margin-left:8px;">{global_check}</strong></div>
+      </div>
+
+      <div style="margin-top:12px; font-size:13px; color:#9fd8ff;">Ligne MRZ complète (masquée par défaut)</div>
+      <pre id="mrzPre" class="mrz-pre">{final_mrz_safe}</pre>
     </div>
     """, unsafe_allow_html=True)
