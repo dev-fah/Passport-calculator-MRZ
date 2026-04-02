@@ -46,7 +46,7 @@ with st.form("mrz_form"):
 
     with col2:
         optional_in = st.text_input("Optional", "<<<<<<<<<<<<<<")
-        st.markdown("<div style='font-size:12px;color:#2b6ea3;margin-top:6px;'>Astuce: utilisez &lt; pour remplir</div>", unsafe_allow_html=True)
+        st.markdown("<div style='font-size:12px;color:#2b6ea3;margin-top:6px;opacity:0.7;'>Astuce: utilisez &lt; pour remplir</div>", unsafe_allow_html=True)
     
     submit = st.form_submit_button("Calculer")
 
@@ -88,7 +88,6 @@ if submit:
     final_mrz = global_string + str(global_check)
 
     # ===== STYLE / HTML / JS (UNIQUEMENT L'APPARENCE) =====
-    # Thème clair, zone MRZ visible et lisible, boutons, micro-animations.
     st.markdown("""
     <style>
     /* Page background: soft gradient light */
@@ -111,22 +110,45 @@ if submit:
     }
     .card:hover { transform: translateY(-6px); box-shadow: 0 18px 50px rgba(15, 30, 50, 0.12); }
 
-    .card h3 { margin:0 0 12px 0; color:#0b3b5a; font-size:18px; }
+    /* Titles and subtitles: bold and prominent */
+    .card h3 {
+      margin:0 0 12px 0;
+      color:#0b3b5a;
+      font-size:18px;
+      font-weight:900; /* very bold */
+      letter-spacing:0.4px;
+    }
+    .label {
+      color:#0b6ea3;
+      font-weight:900; /* bold subtitle */
+      font-size:14px;
+    }
+
+    /* Small descriptive text: low opacity */
+    .muted {
+      color:#4b6b88;
+      font-size:13px;
+      opacity:0.6; /* reduced opacity for less emphasis */
+    }
+    .small-note {
+      font-size:13px;
+      color:#4b6b88;
+      opacity:0.6;
+      margin-top:8px;
+    }
 
     /* Detail rows */
     .detail-row {
       display:flex; justify-content:space-between; align-items:center;
       gap:12px; padding:10px 0; border-bottom:1px dashed rgba(11,27,43,0.04);
     }
-    .label { color:#0b6ea3; font-weight:700; font-size:14px; }
-    .muted { color:#4b6b88; font-size:13px; }
 
     /* Badge: light and readable */
     .badge {
       display:inline-flex; align-items:center; justify-content:center;
       min-width:48px; height:36px; padding:6px 14px;
       background: linear-gradient(90deg,#f0f6ff,#e6f3ff);
-      color:#042033; border-radius:999px; font-weight:800;
+      color:#042033; border-radius:999px; font-weight:900;
       box-shadow: 0 6px 18px rgba(2,24,40,0.06);
       animation: pop 600ms cubic-bezier(.2,.9,.3,1);
     }
@@ -156,7 +178,7 @@ if submit:
     .btn {
       display:inline-flex; align-items:center; gap:8px;
       padding:8px 14px; border-radius:10px; cursor:pointer; border:none;
-      font-weight:700;
+      font-weight:800;
     }
     .btn-ghost {
       background: transparent; color:#0b3b5a; border:1px solid rgba(11,110,163,0.08);
@@ -179,11 +201,8 @@ if submit:
 
     /* Global highlight */
     .global {
-      text-align:center; margin-top:12px; font-size:18px; font-weight:800; color:#0b6ea3; position:relative;
+      text-align:center; margin-top:12px; font-size:18px; font-weight:900; color:#0b6ea3; position:relative;
     }
-
-    /* Small note */
-    .small-note { font-size:13px; color:#4b6b88; margin-top:8px; }
 
     /* Responsive */
     @media (max-width:720px) {
