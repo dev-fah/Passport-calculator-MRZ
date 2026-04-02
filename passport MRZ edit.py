@@ -161,7 +161,7 @@ if submit:
     .mrz-mask .overlay {
       position:absolute; inset:0;
       display:flex; align-items:center; justify-content:center;
-      background: linear-gradient(90deg, rgba(255,255,255,0.85), rgba(255,255,255,0.82));
+      background: linear-gradient(90deg, rgba(0, 0, 0, 1), rgba(255,255,255,0.82));
       color: rgba(11,27,43,0.12);
       font-family:'OCR-B', monospace;
       letter-spacing:6px;
