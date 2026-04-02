@@ -91,7 +91,7 @@ if submit:
     <style>
     .card {
         background: linear-gradient(135deg, #0a0c14, #12161e);
-        border-radius: 14px;
+        border-radius: 30px;
         padding: 20px;
         margin-bottom: 20px;
         color: #dfffe6;
@@ -106,7 +106,7 @@ if submit:
         display:flex;
         justify-content:space-between;
         padding:8px 0;
-        border-bottom:1px dashed #333;
+        border-bottom:5px dashed #333;
     }
 
     .label {
@@ -125,7 +125,7 @@ if submit:
     .mrz {
         background:black;
         padding:12px;
-        border-radius:10px;
+        border-radius:30px;
         font-family: monospace;
         color:#00ff9c;
         letter-spacing:3px;
@@ -143,7 +143,7 @@ if submit:
         background:#00ffd1;
         border:none;
         padding:8px 12px;
-        border-radius:8px;
+        border-radius:30px;
         cursor:pointer;
         font-weight:bold;
     }
