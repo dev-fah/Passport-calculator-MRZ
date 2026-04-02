@@ -1,0 +1,171 @@
+import ipywidgets as widgets
+from IPython.display import display, HTML
+
+
+# ===== Inputs =====
+passport_input = widgets.Text(value='A20256311', description='Passport:')
+birth_input = widgets.Text(value='950712', description='Birth:')
+expiry_input = widgets.Text(value='301125', description='Expiry:')
+optional_input = widgets.Text(value='<<<<<<<<<<<<<<<<<<', description='Optional:')
+
+
+# ===== Bouton =====
+button = widgets.Button(description="Calculer Checksums", button_style='success')
+
+
+# ===== Outputs séparés =====
+output_detail = widgets.Output()
+output_mrz = widgets.Output()
+
+
+# ===== Fonctions =====
+def char_to_value(c):
+   if c.isdigit():
+       return int(c)
+   elif c.isalpha():
+       return ord(c.upper()) - ord('A') + 10
+   elif c == '<':
+       return 0
+   return 0
+
+
+def calc_checksum(s):
+   poids = [7,3,1]
+   return sum(char_to_value(c)*poids[i%3] for i,c in enumerate(s)) % 10
+
+
+def on_button_clicked(b):
+   passport = passport_input.value
+   birth = birth_input.value
+   expiry = expiry_input.value
+   optional = optional_input.value
+  
+   # Checks individuels
+   passport_check = calc_checksum(passport)
+   birth_check = calc_checksum(birth)
+   expiry_check = calc_checksum(expiry)
+   optional_check = calc_checksum(optional)
+  
+   # Checksum global
+   global_string = passport + str(passport_check) + birth + str(birth_check) + expiry + str(expiry_check) + optional + str(optional_check)
+   global_check = calc_checksum(global_string)
+  
+   # ===== Version détaillée stylisée =====
+   with output_detail:
+       output_detail.clear_output()
+       display(HTML(f"""
+       <div class="detail-box">
+           <div class="detail-line"><span class="label">Passport:</span> {passport} → <span class="check">{passport_check}</span></div>
+           <div class="detail-line"><span class="label">Birth:</span> {birth} → <span class="check">{birth_check}</span></div>
+           <div class="detail-line"><span class="label">Expiry:</span> {expiry} → <span class="check">{expiry_check}</span></div>
+           <div class="detail-line"><span class="label">Optional:</span> {optional} → <span class="check">{optional_check}</span></div>
+           <div class="detail-global">Checksum global MRZ: {global_check}</div>
+       </div>
+       """))
+
+
+   # ===== Version MRZ stylisée =====
+   with output_mrz:
+       output_mrz.clear_output()
+       display(HTML(f"""
+       <div class="mrz-box">
+           <div class="mrz-line">{passport}{passport_check}</div>
+           <div class="mrz-line">{birth}{birth_check}{expiry}{expiry_check}{optional}{optional_check}</div>
+           <div class="global">Checksum Global: {global_check}</div>
+       </div>
+       """))
+
+
+# ===== CSS =====
+display(HTML("""
+<style>
+/* Version détaillée */
+.detail-box {
+   background: #111;
+   color: #00ff9c;
+   padding: 15px;
+   border-radius: 18px;
+   font-family: 'Courier New', monospace;
+   width: fit-content;
+   margin-bottom: 20px;
+}
+.detail-line {
+
+   padding: 5px 0;
+   font-size: 16px;
+}
+.label {
+   font-weight: bold;
+   color: #00F0FF;
+}
+.check {
+   background-color: #F0F0F0;
+   color: #000000;
+   padding: 2px 6px;
+   border-radius: 15px;
+   font-weight: bold;
+}
+.detail-global {
+   margin-top: 10px;
+   padding-top: 5px;
+   border-top: 2px solid #333;
+   font-size: 18px;
+   font-weight: bold;
+   color: #0d6efd;
+   text-align: center;
+}
+
+
+/* Version MRZ corrigée */
+@import url('https://fonts.googleapis.com/css2?family=OCR-B&display=swap');
+
+
+.mrz-box {
+   background: #111;
+   color: #00ff9c;
+   padding: 20px;
+   border-radius: 18px;
+   font-family: 'OCR-B', monospace;
+   font-size: 18px;
+
+
+   display: flex;
+   gap: 15px;
+   flex-wrap: wrap;          /* autorise retour à la ligne */
+
+
+   max-width: 500px;         /* 🔥 limite largeur */
+   width: fit-content;       /* s’adapte au contenu */
+}
+
+
+.mrz-part {
+   letter-spacing: 3px;
+   white-space: nowrap;      /* empêche casse bizarre */
+}
+
+
+.global {
+   width: 100%;              /* 🔥 force retour à la ligne */
+   margin-top: 10px;
+   padding-top: 5px;
+   border-top: 2px solid #00ff9c;
+   font-size: 16px;
+   font-weight: bold;
+   text-align: center;
+}
+
+
+</style>
+"""))
+
+
+# ===== Liaison bouton =====
+button.on_click(on_button_clicked)
+
+
+# ===== Affichage interface =====
+display(passport_input, birth_input, expiry_input, optional_input, button, output_detail, output_mrz)
+
+
+
