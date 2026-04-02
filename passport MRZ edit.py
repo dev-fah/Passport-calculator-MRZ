@@ -100,7 +100,7 @@ if submit:
 
     /* Container cards: clair, bord arrondi, ombre douce */
     .card {
-      background: linear-gradient(180deg, #393B3B, #6E6B6B);
+      background: linear-gradient(180deg, #DCE4F7, #DCE4F7); /*Manamboatra*/
       border-radius: 14px;
       padding: 18px;
       margin-bottom: 18px;
