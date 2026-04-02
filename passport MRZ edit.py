@@ -93,7 +93,7 @@ if submit:
     <style>
     /* Page background: doux, pas tout noir */
     .stApp {
-      background: linear-gradient(180deg, #A0C7F2 0%, #FFFFFF 50%, #A0C7F2 100%); /*===========Fond=============*/
+      background: linear-gradient(180deg, #A0C7F2 0%, #FFFFFF 50%, #A0C7F2 80%); /*===========Fond=============*/
       color-scheme: light;
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
     }
@@ -105,7 +105,7 @@ if submit:
       padding: 18px;
       margin-bottom: 18px;
       color: #0b1b2b;
-      box-shadow: 0 8px 30px rgba(15, 30, 50, 0.08);
+      box-shadow: 0 8px 30px rgba(15, 30, 50, 1);
       border: 1px solid rgba(13, 37, 63, 0.06);
       transition: transform .22s cubic-bezier(.2,.9,.3,1), box-shadow .22s;
     }
