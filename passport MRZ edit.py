@@ -119,7 +119,7 @@ if submit:
       gap:12px; padding:10px 0; border-bottom:1px dashed rgba(11,27,43,0.04);
     }
     .label { color:#0b6ea3; font-weight:700; font-size:14px; }
-    .muted { color:#4b6b88; font-size:13px; }
+    .muted { color:#000000; font-size:13px; } /*=============================eeeeeeee======================================*/
 
     /* Badge: clair, lisible */
     .badge {
