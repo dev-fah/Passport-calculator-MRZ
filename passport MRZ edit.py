@@ -86,89 +86,211 @@ if submit:
 
     final_mrz = global_string + str(global_check)
 
-    # ===== CSS COPILOT (AMÉLIORÉ) =====
+    # ===== CSS AMÉLIORÉ (UNIQUEMENT STYLE / ANIMATIONS) =====
     st.markdown("""
     <style>
-    .card {
-        background: linear-gradient(135deg, #0a0c14, #12161e);
-        border-radius: 30px;
-        padding: 20px;
-        margin-bottom: 20px;
-        color: #dfffe6;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    /* Page background */
+    .stApp {
+        background: linear-gradient(180deg, #071021 0%, #0b1220 50%, #071021 100%);
+        color-scheme: dark;
     }
+
+    /* Container cards */
+    .card {
+        background: rgba(255,255,255,0.03);
+        backdrop-filter: blur(6px) saturate(120%);
+        -webkit-backdrop-filter: blur(6px) saturate(120%);
+        border: 1px solid rgba(255,255,255,0.04);
+        border-radius: 18px;
+        padding: 20px;
+        margin-bottom: 18px;
+        color: #e6fff2;
+        box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+        transition: transform 260ms cubic-bezier(.2,.9,.3,1), box-shadow 260ms;
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 22px 60px rgba(2,6,23,0.75); }
 
     .card h3 {
+        margin: 0 0 12px 0;
         color: #9fffa8;
+        font-size: 18px;
+        letter-spacing: 0.4px;
     }
 
+    /* Detail rows */
     .detail-row {
         display:flex;
         justify-content:space-between;
-        padding:8px 0;
-        border-bottom:5px dashed #333;
+        align-items:center;
+        gap:12px;
+        padding:10px 0;
+        border-bottom: 1px dashed rgba(255,255,255,0.03);
     }
-
     .label {
         color:#7be3ff;
-        font-weight:bold;
+        font-weight:700;
+        font-size:14px;
+    }
+    .muted {
+        color:#9fd8ff;
+        font-size:13px;
     }
 
+    /* Animated badge */
     .badge {
-        background:white;
-        color:black;
-        padding:5px 10px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        min-width:44px;
+        height:34px;
+        padding:6px 12px;
+        background: linear-gradient(90deg,#ffffff,#f3f3f3);
+        color:#04121a;
         border-radius:999px;
-        font-weight:bold;
+        font-weight:800;
+        box-shadow: 0 8px 20px rgba(2,6,23,0.45);
+        transform-origin:center;
+        animation: pop 700ms cubic-bezier(.2,.9,.3,1);
+    }
+    @keyframes pop {
+        0% { transform: scale(.6); opacity:0; }
+        60% { transform: scale(1.08); opacity:1; }
+        100% { transform: scale(1); }
     }
 
+    /* MRZ block (glass + OCR feel) */
     .mrz {
-        background:black;
-        padding:12px;
-        border-radius:30px;
-        font-family: monospace;
+        background: linear-gradient(90deg, rgba(2,8,20,0.9), rgba(6,12,30,0.9));
+        border-radius: 14px;
+        padding: 14px;
+        font-family: 'OCR-B', monospace;
         color:#00ff9c;
         letter-spacing:3px;
+        font-size:18px;
+        border: 1px solid rgba(0,255,156,0.06);
+        box-shadow: inset 0 -6px 18px rgba(0,0,0,0.35);
     }
 
+    .mrz .line {
+        display:block;
+        white-space:nowrap;
+        overflow:auto;
+    }
+
+    /* Copy button */
+    .copy-btn {
+        background: linear-gradient(90deg,#00ffd1,#7be3ff);
+        color:#00121a;
+        border:none;
+        padding:8px 14px;
+        border-radius:12px;
+        cursor:pointer;
+        font-weight:800;
+        box-shadow: 0 10px 30px rgba(0,255,209,0.08);
+        transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+    .copy-btn:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(0,255,209,0.12); }
+    .copy-btn:active { transform: translateY(0); }
+
+    /* Final MRZ pre */
+    pre.mrz-pre {
+        background: rgba(0,0,0,0.28);
+        padding:12px;
+        border-radius:10px;
+        color:#bfffdc;
+        font-family:'OCR-B', monospace;
+        overflow:auto;
+        border: 1px solid rgba(255,255,255,0.02);
+    }
+
+    /* Global check highlight with subtle animation */
     .global {
         text-align:center;
-        margin-top:10px;
+        margin-top:12px;
         font-size:20px;
-        font-weight:bold;
+        font-weight:800;
         color:#00ffd1;
+        position:relative;
+    }
+    .global::after {
+        content: "";
+        position:absolute;
+        left:50%;
+        transform:translateX(-50%);
+        bottom:-10px;
+        width:80px;
+        height:4px;
+        background: linear-gradient(90deg,#00ffd1,#7be3ff);
+        border-radius:4px;
+        animation: slide 1.6s infinite linear;
+        opacity:0.9;
+    }
+    @keyframes slide {
+        0% { transform: translateX(-50%) translateX(-30px); opacity:0.6; }
+        50% { transform: translateX(-50%) translateX(30px); opacity:1; }
+        100% { transform: translateX(-50%) translateX(-30px); opacity:0.6; }
     }
 
-    .copy-btn {
-        background:#00ffd1;
-        border:none;
-        padding:8px 12px;
-        border-radius:30px;
-        cursor:pointer;
-        font-weight:bold;
+    /* Responsive */
+    @media (max-width: 720px) {
+        .card { width: 94% !important; margin-left:auto; margin-right:auto; }
+        .mrz { font-size:16px; letter-spacing:2px; }
     }
     </style>
+
+    <!-- Small JS helper for copy feedback -->
+    <script>
+    function copyToClipboard(text, btn) {
+        if (!navigator.clipboard) {
+            alert('Copie non supportée par ce navigateur.');
+            return;
+        }
+        navigator.clipboard.writeText(text).then(function() {
+            const old = btn.innerText;
+            btn.innerText = 'Copié ✓';
+            btn.disabled = true;
+            setTimeout(function(){ btn.innerText = old; btn.disabled = false; }, 1400);
+        }, function() {
+            alert('Impossible de copier automatiquement. Sélectionnez et copiez manuellement.');
+        });
+    }
+    </script>
     """, unsafe_allow_html=True)
 
-    # ===== UI =====
+    # ===== UI (même logique, uniquement style modifié) =====
+    safe_passport = html.escape(passport)
+    safe_birth = html.escape(birth)
+    safe_expiry = html.escape(expiry)
+    safe_optional = html.escape(optional)
+    safe_part_passport = html.escape(part_passport)
+    safe_part_dates = html.escape(birth + str(birth_check) + sex + expiry + str(expiry_check))
+    safe_part_optional = html.escape(part_optional)
+    final_mrz_safe = html.escape(final_mrz)
+
     st.markdown(f"""
-    <div class="card">
+    <div class="card" style="max-width:640px;">
         <h3>Résultats détaillés</h3>
-        <div class="detail-row"><span class="label">Passport</span><span class="badge">{passport_check}</span></div>
-        <div class="detail-row"><span class="label">Birth</span><span class="badge">{birth_check}</span></div>
-        <div class="detail-row"><span class="label">Expiry</span><span class="badge">{expiry_check}</span></div>
-        <div class="detail-row"><span class="label">Optional</span><span class="badge">{optional_check}</span></div>
+        <div class="detail-row"><div><div class="label">Passport</div><div class="muted">{safe_passport}</div></div><div class="badge">{passport_check}</div></div>
+        <div class="detail-row"><div><div class="label">Birth</div><div class="muted">{safe_birth}</div></div><div class="badge">{birth_check}</div></div>
+        <div class="detail-row"><div><div class="label">Expiry</div><div class="muted">{safe_expiry}</div></div><div class="badge">{expiry_check}</div></div>
+        <div class="detail-row"><div><div class="label">Optional</div><div class="muted">{safe_optional}</div></div><div class="badge">{optional_check}</div></div>
         <div class="global">Checksum global : {global_check}</div>
     </div>
 
-    <div class="card">
-        <h3>MRZ</h3>
+    <div class="card" style="max-width:640px;">
+        <h3>Aperçu MRZ</h3>
         <div class="mrz">
-            {part_passport} | {nationality} | {part_dates}<br>
-            {part_optional}
+            <span class="line">{html.escape(part_passport)}  |  {html.escape(nationality)}  |  {html.escape(birth + str(birth_check) + sex + expiry + str(expiry_check))}</span>
+            <span class="line" style="opacity:0.85; font-size:13px; margin-top:6px;">{html.escape(part_optional)}</span>
         </div>
-        <div class="global">Global: {global_check}</div>
 
-        <pre>{final_mrz}</pre>
+        <div style="display:flex; gap:10px; align-items:center; margin-top:12px;">
+            <button class="copy-btn" onclick="copyToClipboard(`{final_mrz_safe}`, this)">Copier MRZ</button>
+            <div style="font-family:monospace; color:#bfffdc; padding:8px 12px; border-radius:10px; background:rgba(0,0,0,0.22);">Global: <strong style="margin-left:8px;">{global_check}</strong></div>
+        </div>
+
+        <div style="margin-top:12px; font-size:13px; color:#9fd8ff;">Ligne MRZ complète</div>
+        <pre class="mrz-pre">{final_mrz_safe}</pre>
     </div>
     """, unsafe_allow_html=True)
