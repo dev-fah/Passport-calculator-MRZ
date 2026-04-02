@@ -125,7 +125,7 @@ if submit:
     .badge {
       display:inline-flex; align-items:center; justify-content:center;
       min-width:48px; height:36px; padding:6px 14px;
-      background: linear-gradient(90deg,#f0f6ff,#e6f3ff);
+      background: linear-gradient(90deg,#f0f6ff,#000000);
       color:#042033; border-radius:999px; font-weight:800;
       box-shadow: 0 6px 18px rgba(2,24,40,0.06);
       animation: pop 600ms cubic-bezier(.2,.9,.3,1);
