@@ -1,10 +1,12 @@
 import streamlit as st
 import html
 import re
+import json
 
 st.set_page_config(page_title="Calculateur MRZ Passport", layout="centered")
 st.title("Calculateur MRZ Passport")
 
+# ===== FONCTIONS =====
 def char_to_value(c):
     if c.isdigit():
         return int(c)
@@ -25,14 +27,15 @@ def normalize_and_pad(passport, birth, expiry, optional):
 
 def simple_validate(passport, birth, expiry, optional):
     errors = []
-    if not re.fullmatch(r'[A-Z0-9<]{1,9}', passport):
-        errors.append("Passport invalide")
+    if not re.fullmatch(r'[A-Z]{1}[0-9]{8}', passport):
+        errors.append("Passport invalide : 1 lettre + 8 chiffres requis")
     if not re.fullmatch(r'\d{6}', birth):
         errors.append("Birth invalide (YYMMDD)")
     if not re.fullmatch(r'\d{6}', expiry):
         errors.append("Expiry invalide (YYMMDD)")
     return errors
 
+# ===== INPUTS =====
 with st.form("mrz_form"):
     col1, col2 = st.columns(2)
     with col1:
@@ -87,14 +90,19 @@ if submit:
     </style>
     <script>
     function copyMRZ(text, btn){
-        navigator.clipboard.writeText(text).then(function(){
+        const data = JSON.parse(text); // décodage sûr
+        navigator.clipboard.writeText(data).then(function(){
             const old = btn.innerText;
             btn.innerText = 'Copié ✓';
-            setTimeout(()=>btn.innerText=old,1200);
+            btn.disabled = true;
+            setTimeout(()=>{btn.innerText=old; btn.disabled=false;},1200);
         });
     }
     </script>
     """, unsafe_allow_html=True)
+
+    # JSON.stringify du texte pour échapper tous les caractères spéciaux
+    final_mrz_json = json.dumps(final_mrz_safe)
 
     st.markdown(f"""
     <div class="card">
@@ -113,7 +121,7 @@ if submit:
         {html.escape(part_optional)}
       </div>
       <br>
-      <button class="btn-primary" onclick="copyMRZ('{final_mrz_safe}', this)">Copier MRZ</button>
+      <button class="btn-primary" onclick='copyMRZ({final_mrz_json}, this)'>Copier MRZ</button>
       <pre>{final_mrz_safe}</pre>
     </div>
     """, unsafe_allow_html=True)
