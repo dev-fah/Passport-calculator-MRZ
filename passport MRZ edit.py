@@ -125,7 +125,7 @@ if submit:
     .badge {
       display:inline-flex; align-items:center; justify-content:center;
       min-width:48px; height:36px; padding:6px 14px;
-      background: linear-gradient(90deg,#f0f6ff,#000000);
+      background: linear-gradient(90deg,#f0f6ff,#ADADAD);
       color:#042033; border-radius:999px; font-weight:800;
       box-shadow: 0 6px 18px rgba(2,24,40,0.06);
       animation: pop 600ms cubic-bezier(.2,.9,.3,1);
@@ -189,7 +189,7 @@ if submit:
 
     /* MRZ pre (hidden by default) */
     pre.mrz-pre {
-      background: #f3f7fb;
+      background: #292929;
       padding:12px; border-radius:8px; color:#0b3b5a;
       font-family:'OCR-B', monospace; overflow:auto; border:1px solid rgba(11,110,163,0.04);
       margin-top:10px; display:none;
