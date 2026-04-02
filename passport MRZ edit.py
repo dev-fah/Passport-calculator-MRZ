@@ -93,14 +93,14 @@ if submit:
     <style>
     /* Page background: doux, pas tout noir */
     .stApp {
-      background: linear-gradient(180deg, #051D4F 0%, #051D4F 50%, #051D4F 100%);
+      background: linear-gradient(180deg, #051D4F 0%, #125AE3 50%, #ABC0E0 100%);
       color-scheme: light;
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
     }
 
     /* Container cards: clair, bord arrondi, ombre douce */
     .card {
-      background: linear-gradient(180deg, #ffffff, #fbfdff);
+      background: linear-gradient(180deg, #393B3B, #6E6B6B);
       border-radius: 14px;
       padding: 18px;
       margin-bottom: 18px;
