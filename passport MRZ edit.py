@@ -93,7 +93,7 @@ if submit:
     <style>
     /* Page background: doux, pas tout noir */
     .stApp {
-      background: linear-gradient(180deg, #A0C7F2 50%, #FFFFFF 30%, #A0C7F2 100%); /*===========Fond=============*/
+      background: linear-gradient(180deg, #A0C7F2 0%, #FFFFFF 30%, #A0C7F2 100%); /*===========Fond=============*/
       color-scheme: light;
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
     }
