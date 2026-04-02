@@ -106,7 +106,7 @@ if submit:
       margin-bottom: 18px;
       color: #0b1b2b;
       box-shadow: 0 8px 30px rgba(13, 37, 63, 0.06);
-      border: 1px solid rgba(15, 30, 50, 0.3);
+      border: 1px solid rgba(15, 30, 50, 0.8);
       transition: transform .22s cubic-bezier(.2,.9,.3,1), box-shadow .22s;
     }
     .card:hover { transform: translateY(-6px); box-shadow: 0 18px 50px rgba(15, 30, 50, 0.12); }
