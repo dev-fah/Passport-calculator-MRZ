@@ -93,14 +93,14 @@ if submit:
     <style>
     /* Page background: doux, pas tout noir */
     .stApp {
-      background: linear-gradient(180deg, #BDC2C9 0%, #BDC2C9 50%, #BDC2C9 100%);
+      background: linear-gradient(180deg, #A0C7F2 0%, #A0C7F2 50%, #A0C7F2 100%); /*===========Fond=============*/
       color-scheme: light;
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
     }
 
     /* Container cards: clair, bord arrondi, ombre douce */
     .card {
-      background: linear-gradient(180deg, #DCE4F7, #DCE4F7); /*Manamboatra*/
+      background: linear-gradient(180deg, #DCE4F7, #DCE4F7); /*=========Manamboatra========*/
       border-radius: 14px;
       padding: 18px;
       margin-bottom: 18px;
