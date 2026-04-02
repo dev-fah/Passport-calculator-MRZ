@@ -45,7 +45,7 @@ with st.form("mrz_form"):
         expiry_in = st.text_input("Expiry (YYMMDD)", "301125")
 
     with col2:
-        optional_in = st.text_input("Optional", "<<<<<<<<<<<<<<")
+        optional_in = st.text_input("Optional", "<<<<<<<<<<<<<<<<")
         st.markdown("<div style='font-size:12px;color:#000000;margin-top:6px;'>Astuce: utilisez &lt; pour remplir</div>", unsafe_allow_html=True)
     
     submit = st.form_submit_button("Calculer")
