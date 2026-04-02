@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import streamlit as st
 import html
 import re
@@ -28,7 +29,7 @@ def normalize_and_pad(passport, birth, expiry, optional):
 
 def simple_validate(passport, birth, expiry, optional):
     errors = []
-    if not re.fullmatch(r'[A-Z]{1}[0-9]{8}', passport):
+    if not re.fullmatch(r'[A-Z][0-9]{8}', passport):
         errors.append("Passport invalide : 1 lettre + 8 chiffres requis")
     if not re.fullmatch(r'\d{6}', birth):
         errors.append("Birth invalide (YYMMDD)")
@@ -53,19 +54,23 @@ with st.form("mrz_form"):
 
 # ===== CALCUL =====
 if submit:
-    # logique inchangée
+    # 1) Normalisation (logique inchangée)
     passport, birth, expiry, optional = normalize_and_pad(passport_in, birth_in, expiry_in, optional_in)
+
+    # 2) Validation (logique inchangée)
     errors = simple_validate(passport, birth, expiry, optional)
     if errors:
         for e in errors:
             st.error(e)
         st.stop()
 
+    # 3) Calculs (logique inchangée)
     passport_check = calc_checksum(passport)
     birth_check = calc_checksum(birth)
     expiry_check = calc_checksum(expiry)
     optional_check = calc_checksum(optional)
 
+    # 4) Construction MRZ (logique inchangée)
     global_string = (
         passport + str(passport_check) +
         birth + str(birth_check) +
@@ -82,7 +87,8 @@ if submit:
     part_optional = optional + str(optional_check)
     final_mrz = global_string + str(global_check)
 
-    # sécurisation des valeurs pour affichage
+    # ===== Sécurisation des valeurs affichées =====
+    # On échappe uniquement les valeurs utilisateur (pas le HTML global)
     safe_passport = html.escape(passport)
     safe_birth = html.escape(birth)
     safe_expiry = html.escape(expiry)
@@ -92,10 +98,12 @@ if submit:
     safe_part_optional = html.escape(part_optional)
     final_mrz_safe = html.escape(final_mrz)
 
-    # JSON string pour la copie (texte brut, non-échappé HTML)
+    # JSON string (texte brut) pour la copie côté client
     final_mrz_json = json.dumps(final_mrz)
 
     # ===== CSS + JS (APPARENCE UNIQUEMENT) =====
+    # Important : n'appelez pas html.escape sur ce bloc CSS/HTML/JS.
+    # Streamlit doit recevoir du HTML non échappé et unsafe_allow_html=True pour le rendre.
     st.markdown(
         f"""
     <style>
@@ -104,10 +112,10 @@ if submit:
       background: linear-gradient(180deg, #eef6fb 0%, #f7fbff 60%);
       color-scheme: light;
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-      padding: 18px 0;
+      padding-bottom: 28px;
     }}
 
-    /* Layout helper */
+    /* Wrapper */
     .wrap {{
       display:flex;
       flex-direction:column;
@@ -116,52 +124,62 @@ if submit:
       width:100%;
     }}
 
-    /* Card base: strong border-radius, layered shadows, glass effect */
+    /* Card: strong border-radius, layered shadows, animated hover */
     .card {{
-      width: 100%;
-      max-width: 820px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(250,252,255,0.98));
-      border-radius: 20px;
-      padding: 22px;
+      width:100%;
+      max-width:900px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,252,255,0.99));
+      border-radius: 22px;
+      padding: 24px;
       box-shadow:
-        0 6px 18px rgba(12,30,60,0.06),
-        0 18px 60px rgba(12,30,60,0.08),
-        inset 0 1px 0 rgba(255,255,255,0.6);
+        0 8px 24px rgba(12,30,60,0.06),
+        0 28px 80px rgba(12,30,60,0.06);
       border: 1px solid rgba(11,110,163,0.06);
-      transition: transform 360ms cubic-bezier(.2,.9,.3,1), box-shadow 360ms;
+      transition: transform 420ms cubic-bezier(.2,.9,.3,1), box-shadow 420ms;
       position: relative;
       overflow: hidden;
     }}
-    /* Decorative animated gradient edge */
+    .card:hover {{
+      transform: translateY(-12px) scale(1.01);
+      box-shadow:
+        0 28px 80px rgba(12,30,60,0.12),
+        0 60px 160px rgba(12,30,60,0.08);
+    }}
+
+    /* Decorative animated edge */
     .card::before {{
       content: "";
       position: absolute;
-      inset: -40% -40% auto -40%;
-      height: 120%;
+      left: -20%;
+      top: -30%;
+      width: 140%;
+      height: 60%;
       background: linear-gradient(90deg, rgba(11,110,163,0.06), rgba(123,201,255,0.06), rgba(11,110,163,0.06));
-      transform: rotate(-6deg);
+      transform: rotate(-8deg);
       filter: blur(18px);
       opacity: 0.9;
-      transition: opacity 400ms;
+      transition: filter 400ms, opacity 400ms;
       pointer-events: none;
     }}
-    .card:hover::before {{ opacity: 1; filter: blur(10px); }}
+    .card:hover::before {{ filter: blur(10px); opacity:1; }}
 
-    .card:hover {{
-      transform: translateY(-10px) scale(1.01);
-      box-shadow:
-        0 18px 60px rgba(12,30,60,0.12),
-        0 40px 120px rgba(12,30,60,0.10);
-    }}
-
-    /* Title */
+    /* Title and labels */
     .card h3 {{
-      margin: 0 0 12px 0;
+      margin: 0 0 14px 0;
       color: #073b57;
       font-size: 20px;
       font-weight: 900;
       letter-spacing: 0.6px;
-      text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+    }}
+    .label {{
+      color: #0b6ea3;
+      font-weight: 900;
+      font-size: 14px;
+    }}
+    .muted {{
+      color: #4b6b88;
+      font-size: 13px;
+      opacity: 0.65;
     }}
 
     /* Detail rows */
@@ -173,21 +191,7 @@ if submit:
       padding:12px 0;
       border-bottom: 1px dashed rgba(11,27,43,0.04);
     }}
-    .detail-left {{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }}
-    .label {{
-      color:#0b6ea3;
-      font-weight:900;
-      font-size:14px;
-    }}
-    .muted {{
-      color:#4b6b88;
-      font-size:13px;
-      opacity:0.65;
-    }}
+    .detail-left {{ display:flex; flex-direction:column; gap:6px; }}
 
     /* Badge with strong animation */
     .badge {{
@@ -201,10 +205,7 @@ if submit:
       color:#042033;
       border-radius:999px;
       font-weight:900;
-      box-shadow:
-        0 8px 24px rgba(11,110,163,0.08),
-        0 0 28px rgba(11,110,163,0.03);
-      transform-origin:center;
+      box-shadow: 0 10px 30px rgba(11,110,163,0.06), 0 0 28px rgba(11,110,163,0.03);
       animation: badgePop 900ms cubic-bezier(.2,.9,.3,1);
     }}
     @keyframes badgePop {{
@@ -213,7 +214,7 @@ if submit:
       100% {{ transform: translateY(0) scale(1); }}
     }}
 
-    /* MRZ block: strong rounded corners, inner glow, subtle parallax on hover */
+    /* MRZ block */
     .mrz {{
       background: linear-gradient(180deg, #f7fbff, #eef6ff);
       border-radius: 14px;
@@ -223,17 +224,13 @@ if submit:
       letter-spacing: 3px;
       font-size: 16px;
       border: 1px solid rgba(11,110,163,0.06);
-      box-shadow: inset 0 -6px 18px rgba(0,0,0,0.02), 0 8px 30px rgba(11,110,163,0.03);
+      box-shadow: inset 0 -6px 18px rgba(0,0,0,0.02);
       transition: transform 300ms cubic-bezier(.2,.9,.3,1), box-shadow 300ms;
-      will-change: transform;
     }}
-    .mrz:hover {{
-      transform: translateY(-6px) rotate(-0.2deg) scale(1.005);
-      box-shadow: inset 0 -8px 26px rgba(0,0,0,0.03), 0 26px 80px rgba(11,110,163,0.06);
-    }}
+    .mrz:hover {{ transform: translateY(-6px) rotate(-0.2deg) scale(1.005); }}
     .mrz .line {{ display:block; white-space:nowrap; overflow:auto; }}
 
-    /* Copy button: bold, animated gradient */
+    /* Copy button */
     .btn {{
       display:inline-flex;
       align-items:center;
@@ -251,7 +248,7 @@ if submit:
     .btn:hover {{ transform: translateY(-3px); filter: brightness(1.02); box-shadow: 0 22px 60px rgba(0,255,209,0.12); }}
     .btn:active {{ transform: translateY(0); }}
 
-    /* MRZ pre: large rounded area for copy preview */
+    /* MRZ pre */
     pre.mrz-pre {{
       background: linear-gradient(180deg,#fbfeff,#f3f9ff);
       padding:14px;
@@ -264,7 +261,7 @@ if submit:
       box-shadow: 0 8px 30px rgba(11,110,163,0.04);
     }}
 
-    /* Strong animated underline for global */
+    /* Global highlight */
     .global {{
       text-align:center;
       margin-top:14px;
@@ -293,9 +290,9 @@ if submit:
       100% {{ transform: translateX(-50%) translateX(-40px); opacity:0.6; }}
     }}
 
-    /* Responsive tweaks */
+    /* Responsive */
     @media (max-width:900px) {{
-      .card {{ padding:16px; border-radius:14px; }}
+      .card {{ padding:18px; border-radius:16px; }}
       .mrz {{ font-size:15px; letter-spacing:2.5px; }}
       .badge {{ min-width:48px; height:36px; }}
     }}
