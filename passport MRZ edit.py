@@ -294,7 +294,7 @@ if submit:
 
       <div id="mrzBlock" class="mrz mrz-mask" style="margin-bottom:10px;">
         <div class="line">{html.escape(part_passport)}  |  {html.escape(nationality)}  |  {html.escape(birth + str(birth_check) + sex + expiry + str(expiry_check))}</div>
-        <div class="line" style="opacity:0.85; font-size:13px; margin-top:6px;">{html.escape(part_optional)}</div>
+        <div class="line" style="opacity:100%; font-size:13px; margin-top:6px;">{html.escape(part_optional)}</div>
         <div class="overlay" style="pointer-events:none;">••••••••••••••••••••••••••••••</div>
       </div>
 
