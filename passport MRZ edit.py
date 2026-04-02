@@ -46,7 +46,7 @@ with st.form("mrz_form"):
 
     with col2:
         optional_in = st.text_input("Optional", "<<<<<<<<<<<<<<")
-        st.markdown("<div style='font-size:12px;color:#2b6ea3;margin-top:6px;'>Astuce: utilisez &lt; pour remplir</div>", unsafe_allow_html=True)
+        st.markdown("<div style='font-size:12px;color:#FFFFFF;margin-top:6px;'>Astuce: utilisez &lt; pour remplir</div>", unsafe_allow_html=True)
     
     submit = st.form_submit_button("Calculer")
 
